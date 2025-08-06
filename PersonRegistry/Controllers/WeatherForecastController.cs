@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace PersonRegistry.Controllers
+namespace PersonRegistry.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]

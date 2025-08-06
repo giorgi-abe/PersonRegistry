@@ -33,8 +33,6 @@ namespace PersonRegistry.Domain.Entities.Persons.Events
         DateTimeOffset? OccurredAtUtc
     ) : DomainEvent(PersonId, OccurredAtUtc ?? DateTimeOffset.UtcNow);
 
-    // If your API always sends the full list and you do a clear + re-add
-    // you can publish one summary event instead of many add/remove events.
     public sealed record PhonesReplaced(
         Guid PersonId,
         IReadOnlyList<PhoneSnapshot> Phones,

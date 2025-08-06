@@ -1,4 +1,4 @@
-namespace PersonRegistry
+namespace PersonRegistry.Api
 {
     public class WeatherForecast
     {
