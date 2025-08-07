@@ -16,7 +16,14 @@ namespace PersonRegistry.Application
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+
+            services.AddMediatR(configuration =>
+            {
+                configuration.RegisterServicesFromAssembly(typeof(ApplicationExtensions).Assembly);
+            });
             services.Decorate(typeof(IRequestHandler<,>), typeof(CustomCommandHandlerDecorator<,>));
+            services.AddAutoMapper(typeof(PersonRegistry.Application.MappingProfiles.PersonProfile).Assembly);
+
 
 
 
