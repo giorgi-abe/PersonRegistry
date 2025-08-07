@@ -1,12 +1,13 @@
-﻿using PersonRegistry.Domain.Entities.Persons;
+﻿using Microsoft.EntityFrameworkCore;
+using PersonRegistry.Application.DTOs;
+using PersonRegistry.Application.Repositories.Aggregates;
+using PersonRegistry.Domain.Entities.Persons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using PersonRegistry.Application.DTOs;
-using PersonRegistry.Application.Repositories.Aggregates;
 
 namespace PersonRegistry.Infrastructure.Persistence.Repositories
 {
@@ -24,7 +25,7 @@ namespace PersonRegistry.Infrastructure.Persistence.Repositories
             await _dbContext.People.AddAsync(person, cancellationToken);
         }
 
-        public async Task<Person?> GetByIdAsync(Guid id)
+        public async Task<Person?> GetByIdAsync(Guid id, CancellationToken cancellationToken    )
         {
             var entity = await _dbContext.People
                 .Include(p => p.IncomingRelations)
@@ -35,14 +36,14 @@ namespace PersonRegistry.Infrastructure.Persistence.Repositories
             return entity;
         }
 
-        public async Task<IEnumerable<Person>> GetAllAsync()
+        public async Task<IEnumerable<Person>> GetAllAsync(CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<bool> IsExistsAsync(Guid id)
+        public async Task<bool> IsExistsAsync(Guid id, cancellationToken)
         {
-            return await _dbContext.People.AnyAsync(p => p.Id == id);
+            return await _dbContext.People.AnyAsync(p => p.Id == id, cancellationToken);
         }
 
         public async Task UpdateAsync(Person person)
@@ -58,7 +59,7 @@ namespace PersonRegistry.Infrastructure.Persistence.Repositories
                 _dbContext.People.Remove(entity);
         }
 
-        public async Task<PagedResult<Person>> SearchAsync(PersonSearchRequest request)
+        public async Task<PagedResult<Person>> SearchAsync(PersonSearchRequest request, CancellationToken cancellationToken)
         {
 
             var query = _dbContext.People
@@ -84,7 +85,7 @@ namespace PersonRegistry.Infrastructure.Persistence.Repositories
             var items = await query
                 .Skip((request.Page - 1) * request.PageSize)
                 .Take(request.PageSize)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return new PagedResult<Person>(items, totalCount, request.Page, request.PageSize);
         }

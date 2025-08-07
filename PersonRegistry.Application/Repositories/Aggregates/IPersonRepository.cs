@@ -10,7 +10,7 @@ namespace PersonRegistry.Application.Repositories.Aggregates
 {
     public interface IPersonRepository : IRepository<Person>
     {
-        Task<PagedResult<Person>> SearchAsync(PersonSearchRequest request);
+        Task<PagedResult<Person>> SearchAsync(PersonSearchRequest request, CancellationToken cancellationToken);
 
     }
 }
