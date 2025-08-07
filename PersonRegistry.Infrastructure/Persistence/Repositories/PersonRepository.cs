@@ -31,7 +31,7 @@ namespace PersonRegistry.Infrastructure.Persistence.Repositories
                 .Include(p => p.IncomingRelations)
                 .Include(p => p.OutgoingRelations)
                 .Include(p => p.PhoneNumbers)
-                .FirstOrDefaultAsync(p => p.Id == id);
+                .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
 
             return entity;
         }
@@ -41,7 +41,7 @@ namespace PersonRegistry.Infrastructure.Persistence.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<bool> IsExistsAsync(Guid id, cancellationToken)
+        public async Task<bool> IsExistsAsync(Guid id, CancellationToken cancellationToken)
         {
             return await _dbContext.People.AnyAsync(p => p.Id == id, cancellationToken);
         }

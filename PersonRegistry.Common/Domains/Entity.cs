@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+var Entities = PersonRegistry.Doc
 namespace PersonRegistry.Common.Domains
 {
     public abstract class Entity<TModel> : IAuditableEntity , ISoftDeletable

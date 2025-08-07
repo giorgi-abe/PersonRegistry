@@ -26,7 +26,7 @@ namespace PersonRegistry.Application.Features.Person.Commands.AddPersonRelation
 
             person.AddRelation(request.RelatedPersonId, request.RelationType);
 
-            await _personRepository.UpdateAsync(person, cancellationToken);
+            await _personRepository.UpdateAsync(person);
 
             return Unit.Value;
         }
