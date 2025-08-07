@@ -21,7 +21,10 @@ namespace PersonRegistry.Application.Features.Person.Commands.AddPerson
                     request.PersonalNumber,
                     request.BirthDate
                 );
-
+                foreach (var phone in request.Phones)
+                {
+                    person.AddPhone(phone.Type, phone.Number);
+                }
                 await _personRepository.AddAsync(person, cancellationToken);
                 return person.Id;
         }

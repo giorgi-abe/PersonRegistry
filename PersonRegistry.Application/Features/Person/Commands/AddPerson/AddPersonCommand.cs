@@ -13,11 +13,8 @@ namespace PersonRegistry.Application.Features.Person.Commands.AddPerson
         GenderType Gender,
         string PersonalNumber,
         DateOnly BirthDate,
-        List<PhoneInput> Phones,
-        List<RelationInput> Relations
+        List<PhoneInput> Phones
     ) : IRequest<Guid>{};
 
     public sealed record PhoneInput(PhoneNumberType Type, string Number);
-
-    public sealed record RelationInput(Guid RelatedPersonId, RelationType Type);
 }

@@ -22,7 +22,7 @@ namespace PersonRegistry.Application
                 configuration.RegisterServicesFromAssembly(typeof(ApplicationExtensions).Assembly);
             });
             services.Decorate(typeof(IRequestHandler<,>), typeof(CustomCommandHandlerDecorator<,>));
-            services.AddAutoMapper(typeof(PersonRegistry.Application.MappingProfiles.PersonProfile).Assembly);
+
 
 
 

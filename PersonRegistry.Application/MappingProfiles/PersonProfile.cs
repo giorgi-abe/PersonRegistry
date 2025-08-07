@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using PersonRegistry.Application.Features.Person.Commands.AddPerson;
+using PersonRegistry.Application.Features.Person.Commands.AddPersonRelation;
+using PersonRegistry.Application.Features.Person.Commands.UpdatePersonBasicInfo;
 using PersonRegistry.Application.Features.Person.Queries.GetPersonById;
 using PersonRegistry.Application.Features.Person.Queries.SearchPeople;
 using PersonRegistry.Domain.Entities.Persons;
@@ -46,8 +49,8 @@ namespace PersonRegistry.Application.MappingProfiles
             CreateMap<PhoneNumber, SearchPeoplePhoneModel>()
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type))
                 .ForMember(dest => dest.Number, opt => opt.MapFrom(src => src.Number.Value));
-
-
+            
+            
         }
     }
 }

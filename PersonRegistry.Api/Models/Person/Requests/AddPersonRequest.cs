@@ -9,5 +9,6 @@ namespace PersonRegistry.Api.Models.Person.Requests
         public GenderType Gender { get; set; }
         public string PersonalNumber { get; set; } = default!;
         public DateOnly BirthDate { get; set; }
+        public List<AddPhoneRequest> Phones { get; set; } = [];
     }
 }
