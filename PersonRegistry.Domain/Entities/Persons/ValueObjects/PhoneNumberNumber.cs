@@ -1,4 +1,5 @@
-﻿using PersonRegistry.Common.Validation;
+﻿using PersonRegistry.Common.Exceptions;
+using PersonRegistry.Common.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,16 +16,16 @@ namespace PersonRegistry.Domain.Entities.Persons.ValueObjects
         public PhoneNumberNumber(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new PhoneNumberInvalidException("Number is required.");
+                throw new DomainException("Number is required.");
 
             var v = value.Trim();
 
             // Allowed characters and length
             if (v.Length is < 4 or > 50)
-                throw new PhoneNumberInvalidException("Length must be 4–50.");
+                throw new DomainException("Length must be 4–50.");
 
             if (!CommonRegex.PhoneAllowed.IsMatch(value))
-                throw new PhoneNumberInvalidException("Allowed: digits, spaces, +, -, ( ).");
+                throw new DomainException("Allowed: digits, spaces, +, -, ( ).");
 
             // Optional light normalization (collapse internal multiple spaces)
             v = Regex.Replace(v, @"\s{2,}", " ");

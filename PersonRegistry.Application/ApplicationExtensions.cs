@@ -14,7 +14,7 @@ namespace PersonRegistry.Application
 {
     public static class ApplicationExtensions
     {
-        public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.Decorate(typeof(IRequestHandler<,>), typeof(CustomCommandHandlerDecorator<,>));
 

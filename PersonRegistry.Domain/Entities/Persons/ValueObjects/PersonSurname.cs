@@ -1,4 +1,5 @@
-﻿using PersonRegistry.Common.Validation;
+﻿using PersonRegistry.Common.Exceptions;
+using PersonRegistry.Common.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,14 +16,14 @@ namespace PersonRegistry.Domain.Entities.Persons.ValueObjects
         public PersonSurname(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new NameInvalidException("Surname is required.");
+                throw new DomainException("Surname is required.");
 
             value = value.Trim();
             if (value.Length is < 2 or > 50)
-                throw new NameInvalidException("Surname length must be 2–50.");
+                throw new DomainException("Surname length must be 2–50.");
 
             if (!(CommonRegex.GeorgianLetters.IsMatch(value) ^ CommonRegex.GeorgianLetters.IsMatch(value)))
-                throw new NameInvalidException("Use either Georgian OR Latin letters only.");
+                throw new DomainException("Use either Georgian OR Latin letters only.");
 
             Value = value;
         }

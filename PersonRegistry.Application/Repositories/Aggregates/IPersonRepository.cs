@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PersonRegistry.Application.DTOs;
+using PersonRegistry.Application.Repositories.DTOs;
+using PersonRegistry.Common.Models;
 using PersonRegistry.Domain.Entities.Persons;
 
 namespace PersonRegistry.Application.Repositories.Aggregates

@@ -15,7 +15,7 @@ namespace PersonRegistry.Application.Features.Person.Commands.AddPerson
         DateOnly BirthDate,
         List<PhoneInput> Phones,
         List<RelationInput> Relations
-    ) : IRequest<Guid>;
+    ) : IRequest<Guid>{};
 
     public sealed record PhoneInput(PhoneNumberType Type, string Number);
 
