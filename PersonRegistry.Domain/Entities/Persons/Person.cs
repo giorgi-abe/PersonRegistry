@@ -1,4 +1,5 @@
 ﻿using PersonRegistry.Common.Domains;
+using PersonRegistry.Common.Exceptions;
 using PersonRegistry.Domain.Entities.Persons.Enums;
 using PersonRegistry.Domain.Entities.Persons.Events;
 using PersonRegistry.Domain.Entities.Persons.ValueObjects;
@@ -83,7 +84,7 @@ namespace PersonRegistry.Domain.Entities.Persons
         public void UpdatePhone(Guid phoneId, PhoneNumberType? type = null, PhoneNumberNumber? number = null)
         {
             var phone = _phoneNumbers.FirstOrDefault(p => p.Id == phoneId)
-                        ?? throw new InvalidOperationException($"Phone #{phoneId} not found.");
+                        ?? throw new DomainException($"Phone #{phoneId} not found.");
             if (type.HasValue) phone.ChangeType(type.Value);
             if (number is not null) phone.ChangeNumber(number);
 
@@ -93,7 +94,7 @@ namespace PersonRegistry.Domain.Entities.Persons
         public void RemovePhone(Guid phoneId)
         {
             var phone = _phoneNumbers.FirstOrDefault(p => p.Id == phoneId)
-                        ?? throw new InvalidOperationException($"Phone #{phoneId} not found.");
+                        ?? throw new DomainException($"Phone #{phoneId} not found.");
             _phoneNumbers.Remove(phone);
 
             AddEvent(new PhoneRemoved(Id, phone.Id, DateTimeOffset.UtcNow));
@@ -114,10 +115,10 @@ namespace PersonRegistry.Domain.Entities.Persons
         public PersonRelation AddRelation(Guid relatedPersonId, RelationType type)
         {
             if (relatedPersonId == Id)
-                throw new InvalidOperationException("Cannot relate a person to themselves.");
+                throw new DomainException("Cannot relate a person to themselves.");
 
             if (_outgoingRelations.Any(r => r.RelatedPersonId == relatedPersonId && r.Type == type))
-                throw new InvalidOperationException("Relation already exists.");
+                throw new DomainException("Relation already exists.");
 
             var rel = PersonRelation.Create(Id, relatedPersonId, type);
             _outgoingRelations.Add(rel);
@@ -126,12 +127,12 @@ namespace PersonRegistry.Domain.Entities.Persons
             return rel;
         }
 
-        public void RemoveRelation(Guid relatedPersonId, RelationType type)
+        public void RemoveRelation(Guid relatedPersonId )
         {
-            var rel = _outgoingRelations.FirstOrDefault(r => r.RelatedPersonId == relatedPersonId && r.Type == type)
-                      ?? throw new InvalidOperationException("Relation not found.");
+            var rel = _outgoingRelations.FirstOrDefault(r => r.RelatedPersonId == relatedPersonId)
+                      ?? throw new DomainException("Relation not found.");
             _outgoingRelations.Remove(rel);
-            AddEvent(new PersonRelationRemoved(Id, relatedPersonId, type, DateTimeOffset.UtcNow));
+            AddEvent(new PersonRelationRemoved(Id, relatedPersonId, DateTimeOffset.UtcNow));
 
         }
 

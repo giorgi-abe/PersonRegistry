@@ -10,7 +10,6 @@ namespace PersonRegistry.Application.Features.Person.Commands.RemovePersonRelati
 {
     public sealed record RemovePersonRelationCommand(
         Guid PersonId,
-        Guid RelatedPersonId,
-        RelationType RelationType
+        Guid RelatedPersonId
     ) : IRequest<Unit>;
 }

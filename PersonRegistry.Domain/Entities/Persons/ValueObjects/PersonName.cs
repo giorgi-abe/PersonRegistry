@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using PersonRegistry.Common.Exceptions;
 
 namespace PersonRegistry.Domain.Entities.Persons.ValueObjects
 {

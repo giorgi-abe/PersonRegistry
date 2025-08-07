@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace PersonRegistry.Application.Features.Person.Commands.AddPerson
 {
-    public class AddPersonCommandValidation : AbstractValidator<AddPersonCommand>
+    public class AddPersonCommandValidator : AbstractValidator<AddPersonCommand>
     {
-        public AddPersonCommandValidation()
+        public AddPersonCommandValidator()
         {
             RuleFor(x => x.Name)
                 .NotNull().WithMessage("Name is required.")

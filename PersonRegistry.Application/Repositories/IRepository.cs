@@ -9,7 +9,7 @@ namespace PersonRegistry.Application.Repositories
     public interface IRepository<TEntity> where TEntity : class
     {
         Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
-        Task<bool> IsExistsAsync(Guid id );
+        Task<bool> IsExistsAsync(Guid id, CancellationToken cancellationToken);
         Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken);
         Task AddAsync(TEntity entity, CancellationToken cancellationToken);
         Task UpdateAsync(TEntity entity );

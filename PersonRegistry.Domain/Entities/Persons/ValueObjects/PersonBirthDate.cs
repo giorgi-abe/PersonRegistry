@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PersonRegistry.Common.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,10 +15,10 @@ namespace PersonRegistry.Domain.Entities.Persons.ValueObjects
         public PersonBirthDate(DateOnly value, DateOnly? today = null)
         {
             var now = today ?? DateOnly.FromDateTime(DateTime.UtcNow);
-            if (value > now) throw new ArgumentException("Birth date cannot be in the future.");
+            if (value > now) throw new DomainException("Birth date cannot be in the future.");
 
             var minBirth = new DateOnly(now.Year - MinAgeYears, now.Month, now.Day);
-            if (value > minBirth) throw new ArgumentException($"Person must be at least {MinAgeYears} years old.");
+            if (value > minBirth) throw new DomainException($"Person must be at least {MinAgeYears} years old.");
             Value = value;
         }
 

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PersonRegistry.Application.DTOs;
 using PersonRegistry.Application.Repositories.Aggregates;
 using PersonRegistry.Domain.Entities.Persons;
 using System;
@@ -8,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using PersonRegistry.Common.Models;
+using PersonRegistry.Application.Repositories.DTOs;
 
 namespace PersonRegistry.Infrastructure.Persistence.Repositories
 {
@@ -64,8 +65,6 @@ namespace PersonRegistry.Infrastructure.Persistence.Repositories
 
             var query = _dbContext.People
                 .Include(p => p.PhoneNumbers)
-                .Include(p => p.OutgoingRelations)
-                .Include(p => p.IncomingRelations)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(request.Name))

@@ -9,9 +9,9 @@ namespace PersonRegistry.Application.Features.Person.Commands.AddPersonRelation
 {
     
 
-    public class AddPersonRelationCommandValidation : AbstractValidator<AddPersonRelationCommand>
+    public class AddPersonRelationCommandValidator : AbstractValidator<AddPersonRelationCommand>
     {
-        public AddPersonRelationCommandValidation()
+        public AddPersonRelationCommandValidator()
         {
             RuleFor(x => x.PersonId)
                 .NotEmpty().WithMessage("PersonId is required.");

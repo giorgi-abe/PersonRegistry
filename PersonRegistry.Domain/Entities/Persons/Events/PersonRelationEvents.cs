@@ -19,7 +19,6 @@ namespace PersonRegistry.Domain.Entities.Persons.Events
     public sealed record PersonRelationRemoved(
         Guid PersonId,
         Guid RelatedPersonId,
-        RelationType Type,
         DateTimeOffset? OccurredAtUtc
     ) : DomainEvent(PersonId,OccurredAtUtc ?? DateTimeOffset.UtcNow);
 

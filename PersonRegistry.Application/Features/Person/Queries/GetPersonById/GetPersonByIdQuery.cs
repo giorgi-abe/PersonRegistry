@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 namespace PersonRegistry.Application.Features.Person.Queries.GetPersonById
 {
     public sealed record GetPersonByIdQuery(Guid PersonId)
-    : IRequest<PersonDto>;
+    : IRequest<GetPersonByIdModel>;
 }

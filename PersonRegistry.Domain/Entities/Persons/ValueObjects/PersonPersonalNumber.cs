@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PersonRegistry.Common.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,7 @@ namespace PersonRegistry.Domain.Entities.Persons.ValueObjects
         {
             value ??= string.Empty;
             if (!Regex.IsMatch(value, @"^\d{11}$"))
-                throw new PersonalNumberInvalidException();
+                throw new DomainException("Personal number must be exactly 11 digits.");
 
             Value = value;
         }
