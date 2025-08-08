@@ -8,7 +8,7 @@ namespace PersonRegistry.Common.Domains.Abstractions
 {
     public interface IAuditableEntity
     {
-        public DateTimeOffset CreatedAtUtc { get; }
-        public DateTimeOffset LastModifiedAtUtc { get; }
+        public DateTimeOffset? CreatedAtUtc { get; }
+        public DateTimeOffset? LastModifiedAtUtc { get; }
     }
 }

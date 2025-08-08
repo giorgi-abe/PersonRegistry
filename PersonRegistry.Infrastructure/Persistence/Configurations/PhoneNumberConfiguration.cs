@@ -35,9 +35,7 @@ namespace PersonRegistry.Infrastructure.Persistence.Configurations
              .HasForeignKey(p => p.PersonId)
              .OnDelete(DeleteBehavior.Cascade);
 
-            b.Property(v => v.IsDeleted)
-              .HasColumnName("IsDeleted")
-              .IsRequired();
+            
 
             //b.HasIndex("PersonId", "Type", "Number", "IsDeleted").IsUnique();
 

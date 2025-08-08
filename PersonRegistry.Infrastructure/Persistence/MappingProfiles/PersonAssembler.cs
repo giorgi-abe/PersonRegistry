@@ -20,6 +20,7 @@ namespace PersonRegistry.Infrastructure.Persistence.MappingProfiles
             e.Gender = d.Gender.ToString();
             e.PersonalNumber = d.PersonalNumber.Value;
             e.BirthDate = d.BirthDate.Value;
+            e.Version = d.Version;
 
             SyncPhones(d, e);
             SyncRelations(d, e);

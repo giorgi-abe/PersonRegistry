@@ -1,10 +1,22 @@
+using PersonRegistry.Api.Middlewares;
 using PersonRegistry.Application;
 using PersonRegistry.Infrastructure;
+using Serilog;
+using Serilog.Sinks.Graylog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Graylog(new GraylogSinkOptions
+    {
+        HostnameOrAddress = "graylog", // service name in docker-compose
+        Port = 12201,
+        TransportType = Serilog.Sinks.Graylog.Core.Transport.TransportType.Udp
+    })
+    .CreateLogger();
 
+builder.Host.UseSerilog();
 builder.Services.AddControllers();
 
 builder.Services.AddApplicationServices();
@@ -17,6 +29,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

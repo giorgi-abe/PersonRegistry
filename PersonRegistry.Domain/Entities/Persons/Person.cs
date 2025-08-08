@@ -31,7 +31,7 @@ namespace PersonRegistry.Domain.Entities.Persons
         //Creation
         private Person() { }
         private Person(PersonName name, PersonSurname surname, GenderType gender,
-               PersonPersonalNumber personalNumber, PersonBirthDate birthDate, Id<Person>? id):base(id)
+               PersonPersonalNumber personalNumber, PersonBirthDate birthDate, Id<Person>? id,bool? throwEvent = false):base(id)
         {
             Name = name;
             Surname = surname;
@@ -39,19 +39,20 @@ namespace PersonRegistry.Domain.Entities.Persons
             PersonalNumber = personalNumber;
             BirthDate = birthDate;
 
-            AddEvent(new PersonCreated(
-                Id,
-                Name.Value,
-                Surname.Value,
-                Gender,
-                PersonalNumber.Value,
-                BirthDate.Value,
-                DateTimeOffset.UtcNow));
+            if(throwEvent is true)
+                 AddEvent(new PersonCreated(
+                        Id,
+                        Name.Value,
+                        Surname.Value,
+                        Gender,
+                        PersonalNumber.Value,
+                        BirthDate.Value,
+                        DateTimeOffset.UtcNow));
 
         }
         public static Person Create(PersonName name, PersonSurname surname, GenderType gender,
                                 PersonPersonalNumber personalNumber, PersonBirthDate birthDate, Id<Person>? id = null)
-        => new(name, surname, gender, personalNumber, birthDate,id);
+        => new(name, surname, gender, personalNumber, birthDate,id,true);
 
         //Update
         public void UpdateBasicInfo(

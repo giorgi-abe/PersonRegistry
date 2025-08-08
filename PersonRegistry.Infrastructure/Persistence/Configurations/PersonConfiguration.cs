@@ -55,21 +55,12 @@ namespace PersonRegistry.Infrastructure.Persistence.Configurations
               .HasColumnName("BirthDate")
               .IsRequired();
 
-            b.Property(v => v.IsDeleted)
-              .HasColumnName("IsDeleted")
-              .IsRequired();
-
             b.Property(v => v.Version)
               .HasColumnName("Version")
               .HasDefaultValue(1)
               .IsRequired();
 
-            b.Property(v => v.LastModifiedAtUtc)
-              .HasColumnName("LastModifiedAtUtc");
-
-            b.Property(v => v.CreatedAtUtc)
-             .HasColumnName("CreatedAtUtc");
-
+            
             // Backing-field navigations (if you have private lists)
             b.Navigation(p => p.PhoneNumbers).UsePropertyAccessMode(PropertyAccessMode.Field);
             b.Navigation(p => p.OutgoingRelations).UsePropertyAccessMode(PropertyAccessMode.Field);
