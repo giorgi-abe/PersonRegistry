@@ -41,9 +41,7 @@ namespace PersonRegistry.Infrastructure.Persistence.Configurations
 
             // Optional helper index
             b.HasIndex(r => new { r.PersonId, r.Type });
-            b.Property(v => v.IsDeleted)
-              .HasColumnName("IsDeleted")
-              .IsRequired();
+            
         }
     }
 }
