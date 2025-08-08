@@ -103,15 +103,45 @@ namespace PersonRegistry.Domain.Entities.Persons
 
         public void ReplacePhones(IEnumerable<(PhoneNumberType Type, PhoneNumberNumber Number)> phones)
         {
-            if (phones is null) throw new ArgumentNullException(nameof(phones));
+            if (phones is null)
+                throw new ArgumentNullException(nameof(phones));
 
-            _phoneNumbers.Clear();
-            foreach (var (type, number) in phones)
-                AddPhone(type, number);
+            var incoming = phones.ToList();
 
-            AddEvent(new PhonesReplaced(Id, _phoneNumbers.Select(o => new PhoneSnapshot(o.Id,o.Type,o.Number)).ToList(), DateTimeOffset.UtcNow));
+            var toRemove = _phoneNumbers
+                .Where(existing => !incoming.Any(p => p.Type == existing.Type && p.Number == existing.Number))
+                .ToList();
+
+            foreach (var phone in toRemove)
+            {
+                _phoneNumbers.Remove(phone);
+                AddEvent(new PhoneRemoved(Id, phone.Id, DateTimeOffset.UtcNow));
+            }
+
+            foreach (var existing in _phoneNumbers)
+            {
+                var match = incoming.FirstOrDefault(p => p.Type == existing.Type && p.Number != existing.Number);
+                if (match != default)
+                {
+                    existing.ChangeNumber(match.Number);
+                    AddEvent(new PhoneUpdated(Id, existing.Id, existing.Type, existing.Number.Value, existing.Type, existing.Number.Value, DateTimeOffset.UtcNow));
+                }
+            }
+
+            foreach (var (type, number) in incoming)
+            {
+                var exists = _phoneNumbers.Any(p => p.Type == type && p.Number == number);
+                if (!exists)
+                {
+                    var added = AddPhone(type, number);
+                }
+            }
+
+            AddEvent(new PhonesReplaced(
+                Id,
+                _phoneNumbers.Select(o => new PhoneSnapshot(o.Id, o.Type, o.Number)).ToList(),
+                DateTimeOffset.UtcNow));
         }
-
         // Relations
         public PersonRelation AddRelation(Guid relatedPersonId, RelationType type)
         {

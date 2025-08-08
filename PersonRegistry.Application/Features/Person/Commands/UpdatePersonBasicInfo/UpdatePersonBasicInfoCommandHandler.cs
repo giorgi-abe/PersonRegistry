@@ -1,11 +1,13 @@
 ﻿using MediatR;
 using PersonRegistry.Application.Repositories.Aggregates;
+using PersonRegistry.Domain.Entities.Persons.Enums;
 using PersonRegistry.Domain.Entities.Persons.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PersonRegistry.Application.Features.Person.Commands.UpdatePersonBasicInfo
 {
@@ -32,7 +34,7 @@ namespace PersonRegistry.Application.Features.Person.Commands.UpdatePersonBasicI
                 request.PersonalNumber,
                 request.BirthDate
             );
-
+            person.ReplacePhones(request.PhoneNumbers.Select(o => (o.Type, new PhoneNumberNumber ( o.PhoneNumber))));
             _personRepository.UpdateAsync(person);
 
             return Unit.Value;
