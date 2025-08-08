@@ -11,11 +11,5 @@ namespace PersonRegistry.Api.Models.Person.Requests
         public GenderType Gender { get; set; }
         public string PersonalNumber { get; set; } = default!;
         public DateOnly BirthDate { get; set; }
-        public List<UpdatePhoneNumberRequest> PhoneNumbers { get; set; }
-    }
-    public sealed class UpdatePhoneNumberRequest
-    {
-        public string PhoneNumber { get; set; }
-        public PhoneNumberType Type { get; set; }
     }
 }

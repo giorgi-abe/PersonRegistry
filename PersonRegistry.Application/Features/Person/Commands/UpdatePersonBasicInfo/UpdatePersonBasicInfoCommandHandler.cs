@@ -34,7 +34,7 @@ namespace PersonRegistry.Application.Features.Person.Commands.UpdatePersonBasicI
                 request.PersonalNumber,
                 request.BirthDate
             );
-            person.ReplacePhones(request.PhoneNumbers.Select(o => (o.Type, new PhoneNumberNumber ( o.PhoneNumber))));
+         
             _personRepository.UpdateAsync(person);
 
             return Unit.Value;

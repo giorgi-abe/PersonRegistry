@@ -2,6 +2,7 @@
 using PersonRegistry.Api.Models.Person.Requests;
 using PersonRegistry.Application.Features.Person.Commands.AddPerson;
 using PersonRegistry.Application.Features.Person.Commands.AddPersonRelation;
+using PersonRegistry.Application.Features.Person.Commands.AddPhoneNumber;
 using PersonRegistry.Application.Features.Person.Commands.UpdatePersonBasicInfo;
 using PersonRegistry.Application.Features.Person.Queries.SearchPeople;
 using PersonRegistry.Domain.Entities.Persons.Enums;
@@ -14,10 +15,7 @@ namespace PersonRegistry.Api.MappingProfiles
         {
             CreateMap<AddPersonRequest, AddPersonCommand>();
 
-            CreateMap<UpdatePersonRequest, UpdatePersonBasicInfoCommand>()
-                .ForMember(d => d.PhoneNumbers, o => o.MapFrom(i => i.PhoneNumbers));
-
-            CreateMap<UpdatePhoneNumberRequest, UpdatePersonPhoneNumberCommand>();
+            CreateMap<UpdatePersonRequest, UpdatePersonBasicInfoCommand>();
 
 
             CreateMap<AddPersonRelationRequest, AddPersonRelationCommand>();
@@ -31,6 +29,7 @@ namespace PersonRegistry.Api.MappingProfiles
                     src.BirthDate,
                     src.Phones.Select(p => new PhoneInput(p.Type, p.Number)).ToList()
                 ));
+            CreateMap<AddPhoneNumberRequest, AddPhoneNumberCommand>();
             CreateMap<SearchPeopleRequestModel, SearchPeopleQuery>();
         }
     }
