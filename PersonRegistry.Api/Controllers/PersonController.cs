@@ -6,6 +6,7 @@ using PersonRegistry.Application.Features.Person.Commands.AddPerson;
 using PersonRegistry.Application.Features.Person.Commands.AddPersonRelation;
 using PersonRegistry.Application.Features.Person.Commands.DeletePerson;
 using PersonRegistry.Application.Features.Person.Commands.RemovePersonRelation;
+using PersonRegistry.Application.Features.Person.Commands.RemovePhoneNumber;
 using PersonRegistry.Application.Features.Person.Commands.UpdatePersonBasicInfo;
 using PersonRegistry.Application.Features.Person.Queries.GetPersonById;
 using PersonRegistry.Application.Features.Person.Queries.SearchPeople;
@@ -79,6 +80,24 @@ namespace PersonRegistry.Api.Controllers
             var query = _mapper.Map<SearchPeopleQuery>(model);
             var result = await _sender.Send(query);
             return Ok(result);
+        }
+
+        // POST: api/person/{id}/phonenumbers
+        [HttpPost("phonenumbers")]
+        public async Task<IActionResult> AddPhoneNumber([FromBody] AddPhoneNumberRequest request)
+        {
+
+            var command = _mapper.Map<AddPersonRelationCommand>(request);
+            await _sender.Send(command);
+            return Ok();
+        }
+
+        // DELETE: api/person/{id}/phonenumbers
+        [HttpDelete("{id:guid}/phonenumbers")]
+        public async Task<IActionResult> RemovePhoneNumber(Guid id, [FromQuery] Guid phoneNumberId)
+        {
+            await _sender.Send(new RemovePhoneNumberCommand(id, phoneNumberId));
+            return NoContent();
         }
     }
 }
