@@ -26,8 +26,10 @@ This solution serves as a practical reference for building real-world, enterpris
   cd PersonRegistry
   docker compose up --build
   ```
+
 ASP.NET Core API at http://localhost:8080
 SQL Server at localhost:1433
+
 ------------------------------------------------------------------------------------------------
 👤 Person Endpoints
 | Method   | Endpoint             | Description                |
