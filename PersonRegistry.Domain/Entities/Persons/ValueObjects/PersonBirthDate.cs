@@ -11,7 +11,7 @@ namespace PersonRegistry.Domain.Entities.Persons.ValueObjects
     {
         public DateOnly Value { get; }
         public const int MinAgeYears = 18;
-
+        private PersonBirthDate() { }
         public PersonBirthDate(DateOnly value, DateOnly? today = null)
         {
             var now = today ?? DateOnly.FromDateTime(DateTime.UtcNow);

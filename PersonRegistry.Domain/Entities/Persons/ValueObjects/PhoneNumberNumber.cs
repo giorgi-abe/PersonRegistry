@@ -16,16 +16,16 @@ namespace PersonRegistry.Domain.Entities.Persons.ValueObjects
         public PhoneNumberNumber(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new DomainException("Number is required.");
+                throw new DomainException("Phone Number is required.");
 
             var v = value.Trim();
 
             // Allowed characters and length
             if (v.Length is < 4 or > 50)
-                throw new DomainException("Length must be 4–50.");
+                throw new DomainException("Phone Number Length must be 4–50.");
 
             if (!CommonRegex.PhoneAllowed.IsMatch(value))
-                throw new DomainException("Allowed: digits, spaces, +, -, ( ).");
+                throw new DomainException("Phone number allowed: digits, spaces, +, -, ( ).");
 
             // Optional light normalization (collapse internal multiple spaces)
             v = Regex.Replace(v, @"\s{2,}", " ");

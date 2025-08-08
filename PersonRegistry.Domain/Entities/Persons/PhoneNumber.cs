@@ -17,7 +17,7 @@ namespace PersonRegistry.Domain.Entities.Persons
 
         private PhoneNumber() { } 
 
-        private PhoneNumber(Guid personId, PhoneNumberType type, PhoneNumberNumber number)
+        private PhoneNumber(Guid personId, PhoneNumberType type, PhoneNumberNumber number, Id<PhoneNumber>? id):base(id)
         {
             if (personId == Guid.Empty) throw new ArgumentOutOfRangeException(nameof(personId));
             PersonId = personId;
@@ -25,8 +25,8 @@ namespace PersonRegistry.Domain.Entities.Persons
             Number = number ?? throw new ArgumentNullException(nameof(number));
         }
 
-        public static PhoneNumber Create(Guid personId, PhoneNumberType type, PhoneNumberNumber number)
-            => new(personId, type, number);
+        public static PhoneNumber Create(Guid personId, PhoneNumberType type, PhoneNumberNumber number, Id<PhoneNumber>? id = null)
+            => new(personId, type, number,id);
 
         public void ChangeType(PhoneNumberType type) => Type = type;
 

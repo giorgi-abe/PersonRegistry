@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PersonRegistry.Domain.Entities.Persons;
+using PersonRegistry.Infrastructure.Persistence.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,57 +11,66 @@ using System.Threading.Tasks;
 namespace PersonRegistry.Infrastructure.Persistence.Configurations
 {
 
-    public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
+    public sealed class PersonConfiguration : IEntityTypeConfiguration<PersonEntity>
     {
-        public void Configure(EntityTypeBuilder<Person> b)
+        public void Configure(EntityTypeBuilder<PersonEntity> b)
         {
             b.ToTable("Persons");
             b.HasKey(p => p.Id);
 
-            // VOs as owned types → single columns
-            b.OwnsOne(p => p.Name, nb =>
-            {
-                nb.Property(v => v.Value)
-                  .HasColumnName("Name")
-                  .HasMaxLength(50)
-                  .IsRequired();
-            });
-
-            b.OwnsOne(p => p.Surname, nb =>
-            {
-                nb.Property(v => v.Value)
-                  .HasColumnName("Surname")
-                  .HasMaxLength(50)
-                  .IsRequired();
-            });
-
-            b.OwnsOne(p => p.PersonalNumber, nb =>
-            {
-                nb.Property(v => v.Value)
-                  .HasColumnName("PersonalNumber")
-                  .HasMaxLength(11)
-                  .IsRequired();
-            });
-
-            b.OwnsOne(p => p.BirthDate, nb =>
-            {
-                nb.Property(v => v.Value)
-                  .HasColumnName("BirthDate")
-                  .IsRequired();
-            });
-
-            // Enums as strings
+            // Gender (enum)
             b.Property(p => p.Gender)
              .HasConversion<string>()
              .HasMaxLength(10)
              .IsRequired();
 
-            // Unique personal number
-            b.HasIndex("PersonalNumber").IsUnique();
-            b.HasIndex("Name");
-            b.HasIndex("Surname");
 
-            // Collections use field access (backing fields)
+            b.Property(v => v.Name)
+                  .HasColumnName("Name")
+                  .HasMaxLength(50)
+                  .IsRequired();
+
+           // b.HasIndex(v => v.Name);
+
+
+
+            b.Property(v => v.Surname)
+                  .HasColumnName("Surname")
+                  .HasMaxLength(50)
+                  .IsRequired();
+
+            //b.HasIndex(v => v.Surname);
+
+
+            b.Property(v => v.PersonalNumber)
+               .HasColumnName("PersonalNumber")
+               .HasMaxLength(11)
+               .IsRequired();
+
+           // b.HasIndex(v => v.PersonalNumber).IsUnique();
+
+
+
+            b.Property(v => v.BirthDate)
+              .HasColumnName("BirthDate")
+              .IsRequired();
+
+            b.Property(v => v.IsDeleted)
+              .HasColumnName("IsDeleted")
+              .IsRequired();
+
+            b.Property(v => v.Version)
+              .HasColumnName("Version")
+              .HasDefaultValue(1)
+              .IsRequired();
+
+            b.Property(v => v.LastModifiedAtUtc)
+              .HasColumnName("LastModifiedAtUtc");
+
+            b.Property(v => v.CreatedAtUtc)
+             .HasColumnName("CreatedAtUtc");
+
+            // Backing-field navigations (if you have private lists)
             b.Navigation(p => p.PhoneNumbers).UsePropertyAccessMode(PropertyAccessMode.Field);
             b.Navigation(p => p.OutgoingRelations).UsePropertyAccessMode(PropertyAccessMode.Field);
             b.Navigation(p => p.IncomingRelations).UsePropertyAccessMode(PropertyAccessMode.Field);

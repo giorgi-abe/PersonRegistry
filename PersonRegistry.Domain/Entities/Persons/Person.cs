@@ -24,14 +24,14 @@ namespace PersonRegistry.Domain.Entities.Persons
         private readonly List<PersonRelation> _outgoingRelations = new();
         private readonly List<PersonRelation> _incomingRelations = new(); 
 
-        public IReadOnlyCollection<PhoneNumber> PhoneNumbers => _phoneNumbers.AsReadOnly();
-        public IReadOnlyCollection<PersonRelation> OutgoingRelations => _outgoingRelations.AsReadOnly();
-        public IReadOnlyCollection<PersonRelation> IncomingRelations => _incomingRelations.AsReadOnly();
+        public List<PhoneNumber> PhoneNumbers => _phoneNumbers;
+        public List<PersonRelation> OutgoingRelations => _outgoingRelations;
+        public List<PersonRelation> IncomingRelations => _incomingRelations;
         
         //Creation
         private Person() { }
         private Person(PersonName name, PersonSurname surname, GenderType gender,
-               PersonPersonalNumber personalNumber, PersonBirthDate birthDate)
+               PersonPersonalNumber personalNumber, PersonBirthDate birthDate, Id<Person>? id):base(id)
         {
             Name = name;
             Surname = surname;
@@ -50,8 +50,8 @@ namespace PersonRegistry.Domain.Entities.Persons
 
         }
         public static Person Create(PersonName name, PersonSurname surname, GenderType gender,
-                                PersonPersonalNumber personalNumber, PersonBirthDate birthDate)
-        => new(name, surname, gender, personalNumber, birthDate);
+                                PersonPersonalNumber personalNumber, PersonBirthDate birthDate, Id<Person>? id = null)
+        => new(name, surname, gender, personalNumber, birthDate,id);
 
         //Update
         public void UpdateBasicInfo(

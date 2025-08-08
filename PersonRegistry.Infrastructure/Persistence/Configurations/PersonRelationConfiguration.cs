@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PersonRegistry.Domain.Entities.Persons;
+using PersonRegistry.Infrastructure.Persistence.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace PersonRegistry.Infrastructure.Persistence.Configurations
 {
-    public sealed class PersonRelationConfiguration : IEntityTypeConfiguration<PersonRelation>
+    public sealed class PersonRelationConfiguration : IEntityTypeConfiguration<PersonRelationEntity>
     {
-        public void Configure(EntityTypeBuilder<PersonRelation> b)
+        public void Configure(EntityTypeBuilder<PersonRelationEntity> b)
         {
             b.ToTable("PersonRelations");
 
@@ -27,19 +28,22 @@ namespace PersonRegistry.Infrastructure.Persistence.Configurations
              .IsRequired();
 
             // Owner (outgoing) relations cascade on delete of owner
-            b.HasOne<Person>()
+            b.HasOne<PersonEntity>()
              .WithMany(p => p.OutgoingRelations)
              .HasForeignKey(r => r.PersonId)
              .OnDelete(DeleteBehavior.Cascade);
 
             // Incoming relations must NOT cascade (avoid cycles)
-            b.HasOne<Person>()
+            b.HasOne<PersonEntity>()
              .WithMany(p => p.IncomingRelations)
              .HasForeignKey(r => r.RelatedPersonId)
              .OnDelete(DeleteBehavior.NoAction);
 
             // Optional helper index
             b.HasIndex(r => new { r.PersonId, r.Type });
+            b.Property(v => v.IsDeleted)
+              .HasColumnName("IsDeleted")
+              .IsRequired();
         }
     }
 }

@@ -1,29 +1,33 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PersonRegistry.Application.Repositories.Aggregates;
+using PersonRegistry.Application.Repositories.DTOs;
+using PersonRegistry.Common.Models;
 using PersonRegistry.Domain.Entities.Persons;
+using PersonRegistry.Infrastructure.Persistence.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using PersonRegistry.Common.Models;
-using PersonRegistry.Application.Repositories.DTOs;
 
 namespace PersonRegistry.Infrastructure.Persistence.Repositories
 {
     public class PersonRepository : IPersonRepository
     {
         private readonly PersonRegistryDbContext _dbContext;
-
-        public PersonRepository(PersonRegistryDbContext dbContext)
+        private readonly IMapper _mapper;
+        public PersonRepository(PersonRegistryDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
         public async Task AddAsync(Person person, CancellationToken cancellationToken)
         {
-            await _dbContext.People.AddAsync(person, cancellationToken);
+            var personDto = _mapper.Map<PersonEntity>(person);
+            await _dbContext.People.AddAsync(personDto, cancellationToken);
         }
 
         public async Task<Person?> GetByIdAsync(Guid id, CancellationToken cancellationToken    )
@@ -34,7 +38,8 @@ namespace PersonRegistry.Infrastructure.Persistence.Repositories
                 .Include(p => p.PhoneNumbers)
                 .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
 
-            return entity;
+
+            return _mapper.Map<Person>(entity); 
         }
 
         public async Task<IEnumerable<Person>> GetAllAsync(CancellationToken cancellationToken)
@@ -49,7 +54,8 @@ namespace PersonRegistry.Infrastructure.Persistence.Repositories
 
         public async Task UpdateAsync(Person person)
         {
-            _dbContext.People.Update(person);
+            var personDto = _mapper.Map<PersonEntity>( person );
+            _dbContext.People.Update(personDto);
             await Task.CompletedTask;
         }
 
@@ -68,24 +74,25 @@ namespace PersonRegistry.Infrastructure.Persistence.Repositories
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(request.Name))
-                query = query.Where(p => EF.Functions.Like(p.Name.Value, $"%{request.Name}%"));
+                query = query.Where(p => EF.Functions.Like(p.Name, $"%{request.Name}%"));
 
             if (!string.IsNullOrWhiteSpace(request.Surname))
-                query = query.Where(p => EF.Functions.Like(p.Surname.Value, $"%{request.Surname}%"));
+                query = query.Where(p => EF.Functions.Like(p.Surname, $"%{request.Surname}%"));
 
             if (!string.IsNullOrWhiteSpace(request.PersonalNumber))
-                query = query.Where(p => EF.Functions.Like(p.PersonalNumber.Value, $"%{request.PersonalNumber}%"));
+                query = query.Where(p => EF.Functions.Like(p.PersonalNumber, $"%{request.PersonalNumber}%"));
 
             if (request.Gender.HasValue)
-                query = query.Where(p => p.Gender == request.Gender);
+                query = query.Where(p => p.Gender == request.Gender.Value.ToString());
 
             var totalCount = await query.CountAsync();
 
-            var items = await query
+            var itemsDto = await query
                 .Skip((request.Page - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .ToListAsync(cancellationToken);
 
+            var items = _mapper.Map<List<Person>>(itemsDto);
             return new PagedResult<Person>(items, totalCount, request.Page, request.PageSize);
         }
 

@@ -20,7 +20,7 @@ namespace PersonRegistry.Domain.Entities.Persons.ValueObjects
             ArgumentException.ThrowIfNullOrWhiteSpace(value);
 
             if (value.Length is < 2 or > 50) throw new DomainException("Name length 2-50");
-            if (!(CommonRegex.GeorgianLetters.IsMatch(value) ^ CommonRegex.GeorgianLetters.IsMatch(value))) 
+            if (!(CommonRegex.LatinLetters.IsMatch(value) ^ CommonRegex.GeorgianLetters.IsMatch(value))) 
                 throw new DomainException("Use either Georgian OR Latin letters only");
 
             Value = value.Trim();

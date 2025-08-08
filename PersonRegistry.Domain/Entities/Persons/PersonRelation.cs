@@ -16,7 +16,7 @@ namespace PersonRegistry.Domain.Entities.Persons
         public RelationType Type { get; private set; }
 
         private PersonRelation() { }
-        private PersonRelation(Guid personId, Guid relatedPersonId, RelationType type)
+        private PersonRelation(Guid personId, Guid relatedPersonId, RelationType type, Id<PersonRelation>? id)
         {
             if (personId == Guid.Empty) throw new ArgumentOutOfRangeException(nameof(personId));
             if (relatedPersonId == Guid.Empty) throw new ArgumentOutOfRangeException(nameof(relatedPersonId));
@@ -27,7 +27,7 @@ namespace PersonRegistry.Domain.Entities.Persons
             Type = type;
         }
 
-        public static PersonRelation Create(Guid personId, Guid relatedPersonId, RelationType type)
-            => new(personId, relatedPersonId, type);
+        public static PersonRelation Create(Guid personId, Guid relatedPersonId, RelationType type, Id<PersonRelation>? id = null)
+            => new(personId, relatedPersonId, type, id);
     }
 }

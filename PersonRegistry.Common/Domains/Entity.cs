@@ -13,9 +13,9 @@ namespace PersonRegistry.Common.Domains
         public DateTimeOffset LastModifiedAtUtc { get; protected set; }
         public bool IsDeleted { get; protected set; }
 
-        protected Entity(Id<TModel> id)
+        protected Entity(Id<TModel>? id)
         {
-            Id = id;
+            Id = id?? Id<TModel>.New();
         }
 
         protected Entity() : this(Id<TModel>.New()) { }

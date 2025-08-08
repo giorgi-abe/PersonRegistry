@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PersonRegistry.Domain.Entities.Persons;
+using PersonRegistry.Infrastructure.Persistence.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,10 @@ namespace PersonRegistry.Infrastructure.Persistence
         public PersonRegistryDbContext(DbContextOptions<PersonRegistryDbContext> options)
             : base(options) { }
 
-        public DbSet<Person> People { get; set; }
-        public DbSet<PhoneNumber> PhoneNumbers { get; set; }
-        public DbSet<PersonRelation> PersonRelations { get; set; }
+        public DbSet<PersonEntity> People { get; set; }
+        
+        public DbSet<PhoneNumberEntity> PhoneNumbers { get; set; }
+        public DbSet<PersonRelationEntity> PersonRelations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,6 +29,8 @@ namespace PersonRegistry.Infrastructure.Persistence
             // Optional: Add additional configurations if required
 
             base.OnModelCreating(modelBuilder);
+
+         
         }
     }
 }

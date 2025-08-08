@@ -25,6 +25,7 @@ namespace PersonRegistry.Application.Behaviours
         {
             _inner = inner;
             _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken)

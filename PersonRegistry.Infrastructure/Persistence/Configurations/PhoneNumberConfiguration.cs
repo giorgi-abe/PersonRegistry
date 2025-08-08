@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PersonRegistry.Domain.Entities.Persons;
+using PersonRegistry.Domain.Entities.Persons.ValueObjects;
+using PersonRegistry.Infrastructure.Persistence.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace PersonRegistry.Infrastructure.Persistence.Configurations
 {
-    public sealed class PhoneNumberConfiguration : IEntityTypeConfiguration<PhoneNumber>
+    public sealed class PhoneNumberConfiguration : IEntityTypeConfiguration<PhoneNumberEntity>
     {
-        public void Configure(EntityTypeBuilder<PhoneNumber> b)
+        public void Configure(EntityTypeBuilder<PhoneNumberEntity> b)
         {
             b.ToTable("PhoneNumbers");
             b.HasKey(p => p.Id);
@@ -23,29 +25,23 @@ namespace PersonRegistry.Infrastructure.Persistence.Configurations
              .HasMaxLength(10)
              .IsRequired();
 
-            b.OwnsOne(p => p.Number, nb =>
-            {
-                nb.Property(v => v.Value)
-                  .HasColumnName("Number")
-                  .HasMaxLength(50)
-                  .IsRequired();
-            });
+            b.Property(p => p.Number)
+             .HasColumnName("Number")
+             .HasMaxLength(50)
+             .IsRequired();
 
-            b.HasOne<Person>()
+            b.HasOne<PersonEntity>()
              .WithMany(p => p.PhoneNumbers)
              .HasForeignKey(p => p.PersonId)
              .OnDelete(DeleteBehavior.Cascade);
 
-          
-            b.HasIndex(p => new
-            {
-                p.PersonId,
-                p.Type,
-                Number = EF.Property<string>(p, "Number") 
-            })
-             .IsUnique();
+            b.Property(v => v.IsDeleted)
+              .HasColumnName("IsDeleted")
+              .IsRequired();
 
-    
+            //b.HasIndex("PersonId", "Type", "Number", "IsDeleted").IsUnique();
+
+
         }
     }
 }

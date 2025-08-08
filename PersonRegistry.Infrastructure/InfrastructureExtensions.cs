@@ -38,15 +38,16 @@ namespace PersonRegistry.Infrastructure
 
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddDbContext<PersonRegistryDbContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            services.AddAutoMapper(
+               typeof(PersonRegistry.Infrastructure.Persistence.MappingProfiles.PersonProfile).Assembly
+           );
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IPersonRepository, PersonRepository>();
 
 
-            
-
-            // Register DbContext with a connection string
-            services.AddDbContext<PersonRegistryDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+           
 
             return services;
         }

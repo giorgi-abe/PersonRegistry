@@ -12,6 +12,10 @@ namespace PersonRegistry.Application.Features.Person.Commands.AddPerson
     public class AddPersonCommandHandler :IRequestHandler<AddPersonCommand,Guid>
     {
         private readonly IPersonRepository _personRepository;
+        public AddPersonCommandHandler(IPersonRepository personRepository)
+        {
+            _personRepository = personRepository;
+        }
         public async Task<Guid> Handle(AddPersonCommand request, CancellationToken cancellationToken)
         {
                 var person = Entities.Person.Create(

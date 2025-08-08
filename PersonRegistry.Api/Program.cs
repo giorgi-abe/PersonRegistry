@@ -10,7 +10,6 @@ builder.Services.AddControllers();
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddAutoMapper(
-    typeof(PersonRegistry.Application.MappingProfiles.PersonProfile).Assembly,
     typeof(PersonRegistry.Api.MappingProfiles.PersonProfile).Assembly
     );
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -22,11 +21,12 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseHttpsRedirection();
+app.ApplyMigrations();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

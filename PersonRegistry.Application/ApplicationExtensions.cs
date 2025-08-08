@@ -23,7 +23,9 @@ namespace PersonRegistry.Application
             });
             services.Decorate(typeof(IRequestHandler<,>), typeof(CustomCommandHandlerDecorator<,>));
 
-
+            services.AddAutoMapper(
+                typeof(PersonRegistry.Application.MappingProfiles.PersonProfile).Assembly
+            );
 
 
 

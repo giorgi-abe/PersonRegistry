@@ -10,6 +10,14 @@ namespace PersonRegistry.Common.Domains
 {
     public abstract class AggregateRoot<TModel> : Entity<TModel>
     {
+        protected AggregateRoot()
+        {
+            
+        }
+        protected AggregateRoot(Id<TModel>? id) :base(id)
+        {
+            
+        }
         public uint Version { get; protected set; }
         
         private bool _versionIncremented;

@@ -22,7 +22,7 @@ namespace PersonRegistry.Domain.Entities.Persons.ValueObjects
             if (value.Length is < 2 or > 50)
                 throw new DomainException("Surname length must be 2–50.");
 
-            if (!(CommonRegex.GeorgianLetters.IsMatch(value) ^ CommonRegex.GeorgianLetters.IsMatch(value)))
+            if (!(CommonRegex.GeorgianLetters.IsMatch(value) ^ CommonRegex.LatinLetters.IsMatch(value)))
                 throw new DomainException("Use either Georgian OR Latin letters only.");
 
             Value = value;
