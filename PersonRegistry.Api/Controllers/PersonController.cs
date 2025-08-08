@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using PersonRegistry.Api.Models.Person.Requests;
 using PersonRegistry.Application.Features.Person.Commands.AddPerson;
 using PersonRegistry.Application.Features.Person.Commands.AddPersonRelation;
+using PersonRegistry.Application.Features.Person.Commands.AddPhoneNumber;
 using PersonRegistry.Application.Features.Person.Commands.DeletePerson;
 using PersonRegistry.Application.Features.Person.Commands.RemovePersonRelation;
 using PersonRegistry.Application.Features.Person.Commands.RemovePhoneNumber;
@@ -87,7 +88,7 @@ namespace PersonRegistry.Api.Controllers
         public async Task<IActionResult> AddPhoneNumber([FromBody] AddPhoneNumberRequest request)
         {
 
-            var command = _mapper.Map<AddPersonRelationCommand>(request);
+            var command = _mapper.Map<AddPhoneNumberCommand>(request);
             await _sender.Send(command);
             return Ok();
         }
