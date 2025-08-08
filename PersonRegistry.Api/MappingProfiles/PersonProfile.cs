@@ -27,7 +27,7 @@ namespace PersonRegistry.Api.MappingProfiles
                     src.BirthDate,
                     src.Phones.Select(p => new PhoneInput(p.Type, p.Number)).ToList()
                 ));
-
+            CreateMap<SearchPeopleRequestModel, SearchPeopleQuery>();
         }
     }
 }

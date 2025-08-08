@@ -33,6 +33,8 @@ namespace PersonRegistry.Application.Features.Person.Commands.UpdatePersonBasicI
                 request.BirthDate
             );
 
+            _personRepository.UpdateAsync(person);
+
             return Unit.Value;
         }
     }

@@ -8,7 +8,7 @@ namespace PersonRegistry.Common.Domains
 {
     public abstract class Entity<TModel> : IAuditableEntity , ISoftDeletable
     {
-        public Id<TModel> Id { get; }
+        public Id<TModel> Id { get; protected set; }
         public DateTimeOffset CreatedAtUtc { get; protected set; }
         public DateTimeOffset LastModifiedAtUtc { get; protected set; }
         public bool IsDeleted { get; protected set; }

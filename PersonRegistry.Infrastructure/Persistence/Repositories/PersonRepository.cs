@@ -5,6 +5,7 @@ using PersonRegistry.Application.Repositories.DTOs;
 using PersonRegistry.Common.Models;
 using PersonRegistry.Domain.Entities.Persons;
 using PersonRegistry.Infrastructure.Persistence.Entities;
+using PersonRegistry.Infrastructure.Persistence.MappingProfiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +19,14 @@ namespace PersonRegistry.Infrastructure.Persistence.Repositories
     {
         private readonly PersonRegistryDbContext _dbContext;
         private readonly IMapper _mapper;
-        public PersonRepository(PersonRegistryDbContext dbContext, IMapper mapper)
+        private readonly IdentityMap _identity;
+        private readonly PersonAssembler _asm;
+        public PersonRepository(PersonRegistryDbContext dbContext, IMapper mapper, IdentityMap identity, PersonAssembler asm)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _identity = identity;
+            _asm = asm;
         }
 
         public async Task AddAsync(Person person, CancellationToken cancellationToken)
@@ -30,16 +35,18 @@ namespace PersonRegistry.Infrastructure.Persistence.Repositories
             await _dbContext.People.AddAsync(personDto, cancellationToken);
         }
 
-        public async Task<Person?> GetByIdAsync(Guid id, CancellationToken cancellationToken    )
+        public async Task<Person?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             var entity = await _dbContext.People
                 .Include(p => p.IncomingRelations)
                 .Include(p => p.OutgoingRelations)
                 .Include(p => p.PhoneNumbers)
-                .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+                .FirstOrDefaultAsync(p => p.Id == id, cancellationToken)
+                 ?? throw new KeyNotFoundException($"Person {id} not found.");
 
-
-            return _mapper.Map<Person>(entity); 
+            var d = _asm.ToDomain(entity);
+            _identity.Attach(d,entity);
+            return d;
         }
 
         public async Task<IEnumerable<Person>> GetAllAsync(CancellationToken cancellationToken)
@@ -54,6 +61,10 @@ namespace PersonRegistry.Infrastructure.Persistence.Repositories
 
         public async Task UpdateAsync(Person person)
         {
+            if (_identity.TryGetEntity(person, out PersonEntity personEntity)) {
+                _asm.Apply(person, personEntity);
+                await Task.CompletedTask;
+            }
             var personDto = _mapper.Map<PersonEntity>( person );
             _dbContext.People.Update(personDto);
             await Task.CompletedTask;

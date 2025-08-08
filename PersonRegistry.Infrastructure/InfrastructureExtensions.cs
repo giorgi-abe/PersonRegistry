@@ -1,17 +1,18 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using PersonRegistry.Application.Repositories;
+using PersonRegistry.Application.Repositories.Aggregates;
 using PersonRegistry.Infrastructure.Persistence;
+using PersonRegistry.Infrastructure.Persistence.MappingProfiles;
+using PersonRegistry.Infrastructure.Persistence.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using PersonRegistry.Application.Repositories.Aggregates;
-using PersonRegistry.Infrastructure.Persistence.Repositories;
 
 namespace PersonRegistry.Infrastructure
 {
@@ -43,6 +44,8 @@ namespace PersonRegistry.Infrastructure
             services.AddAutoMapper(
                typeof(PersonRegistry.Infrastructure.Persistence.MappingProfiles.PersonProfile).Assembly
            );
+            services.AddSingleton<PersonAssembler>();
+            services.AddScoped<IdentityMap>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IPersonRepository, PersonRepository>();
 

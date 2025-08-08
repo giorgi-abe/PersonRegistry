@@ -27,7 +27,7 @@ namespace PersonRegistry.Infrastructure.Persistence.Entities
 
         public List<PhoneNumberEntity> PhoneNumbers { get; set; }
 
-        public ICollection<PersonRelationEntity> OutgoingRelations { get; set; }
+        public List<PersonRelationEntity> OutgoingRelations { get; set; }
         public ICollection<PersonRelationEntity> IncomingRelations { get; set; }
     }
 }
