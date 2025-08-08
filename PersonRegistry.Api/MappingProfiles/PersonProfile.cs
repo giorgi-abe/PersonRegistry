@@ -14,7 +14,11 @@ namespace PersonRegistry.Api.MappingProfiles
         {
             CreateMap<AddPersonRequest, AddPersonCommand>();
 
-            CreateMap<UpdatePersonRequest, UpdatePersonBasicInfoCommand>();
+            CreateMap<UpdatePersonRequest, UpdatePersonBasicInfoCommand>()
+                .ForMember(d => d.PhoneNumbers, o => o.MapFrom(i => i.PhoneNumbers));
+
+            CreateMap<UpdatePhoneNumberRequest, UpdatePersonPhoneNumberCommand>();
+
 
             CreateMap<AddPersonRelationRequest, AddPersonRelationCommand>();
             CreateMap<AddPhoneRequest, PhoneInput>();

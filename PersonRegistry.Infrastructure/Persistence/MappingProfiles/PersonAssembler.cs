@@ -13,15 +13,6 @@ namespace PersonRegistry.Infrastructure.Persistence.MappingProfiles
 {
     public sealed class PersonAssembler
     {
-        public Person ToDomain(PersonEntity e)
-            => Person.Create(
-                new PersonName(e.Name),
-                new PersonSurname(e.Surname),
-                Enum.Parse<GenderType>(e.Gender, true),
-                new PersonPersonalNumber(e.PersonalNumber),
-                new PersonBirthDate(e.BirthDate),
-                Id<Person>.FromGuid(e.Id));
-
         public void Apply(Person d, PersonEntity e)
         {
             e.Name = d.Name.Value;

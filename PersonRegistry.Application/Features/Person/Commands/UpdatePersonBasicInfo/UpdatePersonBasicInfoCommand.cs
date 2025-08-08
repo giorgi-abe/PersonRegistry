@@ -14,6 +14,9 @@ namespace PersonRegistry.Application.Features.Person.Commands.UpdatePersonBasicI
         string Surname,
         GenderType Gender,
         string PersonalNumber,
-        DateOnly BirthDate
+        DateOnly BirthDate,
+        List<UpdatePersonPhoneNumberCommand> PhoneNumbers
     ) : IRequest<Unit>;
+
+    public record UpdatePersonPhoneNumberCommand(string PhoneNumber, PhoneNumberType Type);
 }

@@ -27,6 +27,8 @@ namespace PersonRegistry.Application.Features.Person.Commands.RemovePersonRelati
 
             person.RemoveRelation(request.RelatedPersonId);
 
+            await _personRepository.UpdateAsync(person);
+
             return Unit.Value;
         }
     }

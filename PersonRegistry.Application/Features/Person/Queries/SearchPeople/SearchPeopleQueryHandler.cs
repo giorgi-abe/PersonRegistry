@@ -32,7 +32,7 @@ namespace PersonRegistry.Application.Features.Person.Queries.SearchPeople
                     PersonalNumber = request.PersonalNumber,
                     Gender = request.Gender,
                     Page = request.Page ?? 0,
-                    PageSize = request.Page ?? 0
+                    PageSize = request.PageSize ?? 0
                 },
                 cancellationToken
             );

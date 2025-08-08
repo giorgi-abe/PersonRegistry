@@ -30,6 +30,7 @@ namespace PersonRegistry.Application.Features.Person.Queries.GetPersonById
 
     public sealed class GetPersonByIdPersonRelationModel
     {
+        public Guid Id { get; init; }
         public Guid RelatedPersonId { get; init; }
         public RelationType Type { get; init; }
     }

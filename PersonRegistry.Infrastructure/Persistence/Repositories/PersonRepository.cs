@@ -44,7 +44,7 @@ namespace PersonRegistry.Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(p => p.Id == id, cancellationToken)
                  ?? throw new KeyNotFoundException($"Person {id} not found.");
 
-            var d = _asm.ToDomain(entity);
+            var d = _mapper.Map<Person>(entity);
             _identity.Attach(d,entity);
             return d;
         }
@@ -64,10 +64,13 @@ namespace PersonRegistry.Infrastructure.Persistence.Repositories
             if (_identity.TryGetEntity(person, out PersonEntity personEntity)) {
                 _asm.Apply(person, personEntity);
                 await Task.CompletedTask;
+
+            }else
+            { 
+                    var personDto = _mapper.Map<PersonEntity>(person);
+                _dbContext.People.Update(personDto);
+                await Task.CompletedTask;
             }
-            var personDto = _mapper.Map<PersonEntity>( person );
-            _dbContext.People.Update(personDto);
-            await Task.CompletedTask;
         }
 
         public async Task DeleteAsync(Guid id)
