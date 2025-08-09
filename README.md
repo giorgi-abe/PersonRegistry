@@ -14,6 +14,12 @@ This project demonstrates:
  
  ✅ Dockerized infrastructure for easy deployment
 
+ ✅Auditing: Automatic CreatedAtUtc and LastModifiedAtUtc
+
+ ✅Soft Delete: Global query filter hides deleted entities by default
+
+ ✅Filtered Unique Indexes: Enforce uniqueness for active (non-deleted) records
+
 This solution serves as a practical reference for building real-world, enterprise-grade application architecture in .NET.
 
 

@@ -1,14 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PersonRegistry.Common.Domains.Abstractions;
 using PersonRegistry.Domain.Entities.Persons;
 using PersonRegistry.Infrastructure.Persistence.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
-using PersonRegistry.Common.Domains.Abstractions;
 
 namespace PersonRegistry.Infrastructure.Persistence
 {
@@ -27,17 +28,17 @@ namespace PersonRegistry.Infrastructure.Persistence
             // Apply Fluent API configurations from the current assembly
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
+            // Add a global filter so soft-deleted entities (IsDeleted = true) are excluded from queries.
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
-                if (typeof(IAuditableEntity).IsAssignableFrom(entityType.ClrType))
-                {
-                    modelBuilder.Entity(entityType.ClrType).Property<DateTimeOffset>("CreatedAtUtc");
-                    modelBuilder.Entity(entityType.ClrType).Property<DateTimeOffset>("LastModifiedAtUtc");
-                }
-
                 if (typeof(ISoftDeletable).IsAssignableFrom(entityType.ClrType))
                 {
-                    modelBuilder.Entity(entityType.ClrType).Property<bool>("IsDeleted");
+                    var parameter = Expression.Parameter(entityType.ClrType, "e");
+                    var property = Expression.Property(parameter, nameof(ISoftDeletable.IsDeleted));
+                    var condition = Expression.Equal(property, Expression.Constant(false));
+                    var lambda = Expression.Lambda(condition, parameter);
+
+                    modelBuilder.Entity(entityType.ClrType).HasQueryFilter(lambda);
                 }
             }
 
@@ -47,6 +48,7 @@ namespace PersonRegistry.Infrastructure.Persistence
         }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
+            // Set auditing fields (CreatedAtUtc, LastModifiedAtUtc) for added/modified auditable entities.
             var entries = ChangeTracker.Entries()
                 .Where(e => e.Entity is IAuditableEntity &&
                             (e.State == EntityState.Added || e.State == EntityState.Modified));
@@ -55,6 +57,10 @@ namespace PersonRegistry.Infrastructure.Persistence
 
             foreach (var entry in entries)
             {
+                // If CreatedAtUtc is missing, treat it as a new entity
+                if (entry.Property("CreatedAtUtc").CurrentValue is null)
+                    entry.State = EntityState.Added;
+
                 if (entry.State == EntityState.Added)
                     entry.Property("CreatedAtUtc").CurrentValue = now;
 

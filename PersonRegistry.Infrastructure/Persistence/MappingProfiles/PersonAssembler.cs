@@ -13,6 +13,7 @@ namespace PersonRegistry.Infrastructure.Persistence.MappingProfiles
 {
     public sealed class PersonAssembler
     {
+        // Maps values from the domain Person to the persistence PersonEntity.
         public void Apply(Person d, PersonEntity e)
         {
             e.Name = d.Name.Value;
@@ -26,13 +27,13 @@ namespace PersonRegistry.Infrastructure.Persistence.MappingProfiles
             SyncRelations(d, e);
         }
 
+        // Syncs phone numbers: updates existing, removes missing, adds new.
         private static void SyncPhones(Person d, PersonEntity e)
         {
             var existing = e.PhoneNumbers.ToDictionary(x => x.Id, x => x);
 
             var domainIds = d.PhoneNumbers.Select(p => (Guid)p.Id).ToHashSet();
             e.PhoneNumbers.RemoveAll(x => !domainIds.Contains(x.Id));
-
             foreach (var dp in d.PhoneNumbers)
             {
                 if (existing.TryGetValue((Guid)dp.Id, out var ep))
@@ -44,7 +45,7 @@ namespace PersonRegistry.Infrastructure.Persistence.MappingProfiles
                 {
                     e.PhoneNumbers.Add(new PhoneNumberEntity
                     {
-                        Id = (Guid)dp.Id,
+                        Id = dp.Id.Value,
                         PersonId = e.Id,
                         Type = dp.Type.ToString(),
                         Number = dp.Number.Value
@@ -52,6 +53,7 @@ namespace PersonRegistry.Infrastructure.Persistence.MappingProfiles
                 }
             }
         }
+        // Syncs outgoing relations: updates existing, removes missing, adds new.
         private static void SyncRelations(Person d, PersonEntity e)
         {
             var existing = e.OutgoingRelations.ToDictionary(r => r.Id);

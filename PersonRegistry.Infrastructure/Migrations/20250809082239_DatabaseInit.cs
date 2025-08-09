@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PersonRegistry.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class CreatingDbWithMainEntities : Migration
+    public partial class DatabaseInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,8 +22,8 @@ namespace PersonRegistry.Infrastructure.Migrations
                     PersonalNumber = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
                     BirthDate = table.Column<DateOnly>(type: "date", nullable: false),
                     Version = table.Column<long>(type: "bigint", nullable: false, defaultValue: 1L),
-                    CreatedAtUtc = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    LastModifiedAtUtc = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    CreatedAtUtc = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedAtUtc = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -35,15 +35,17 @@ namespace PersonRegistry.Infrastructure.Migrations
                 name: "PersonRelations",
                 columns: table => new
                 {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PersonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RelatedPersonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAtUtc = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedAtUtc = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PersonRelations", x => new { x.PersonId, x.RelatedPersonId, x.Type });
+                    table.PrimaryKey("PK_PersonRelations", x => x.Id);
                     table.ForeignKey(
                         name: "FK_PersonRelations_Persons_PersonId",
                         column: x => x.PersonId,
@@ -65,6 +67,8 @@ namespace PersonRegistry.Infrastructure.Migrations
                     PersonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     Number = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    CreatedAtUtc = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedAtUtc = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -79,9 +83,11 @@ namespace PersonRegistry.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PersonRelations_PersonId_Type",
+                name: "IX_PersonRelations_PersonId_RelatedPersonId_Type",
                 table: "PersonRelations",
-                columns: new[] { "PersonId", "Type" });
+                columns: new[] { "PersonId", "RelatedPersonId", "Type" },
+                unique: true,
+                filter: "[IsDeleted] = 0");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PersonRelations_RelatedPersonId",
@@ -89,9 +95,27 @@ namespace PersonRegistry.Infrastructure.Migrations
                 column: "RelatedPersonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PhoneNumbers_PersonId",
+                name: "IX_Persons_Name",
+                table: "Persons",
+                column: "Name");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Persons_PersonalNumber",
+                table: "Persons",
+                column: "PersonalNumber",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Persons_Surname",
+                table: "Persons",
+                column: "Surname");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PhoneNumbers_PersonId_Type_Number",
                 table: "PhoneNumbers",
-                column: "PersonId");
+                columns: new[] { "PersonId", "Type", "Number" },
+                unique: true,
+                filter: "[IsDeleted] = 0");
         }
 
         /// <inheritdoc />

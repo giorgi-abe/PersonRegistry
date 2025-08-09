@@ -12,8 +12,8 @@ using PersonRegistry.Infrastructure.Persistence;
 namespace PersonRegistry.Infrastructure.Migrations
 {
     [DbContext(typeof(PersonRegistryDbContext))]
-    [Migration("20250808092646_ChangesForAutoUpdates")]
-    partial class ChangesForAutoUpdates
+    [Migration("20250809082239_DatabaseInit")]
+    partial class DatabaseInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,7 +35,7 @@ namespace PersonRegistry.Infrastructure.Migrations
                         .HasColumnType("date")
                         .HasColumnName("BirthDate");
 
-                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                    b.Property<DateTimeOffset?>("CreatedAtUtc")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Gender")
@@ -46,7 +46,7 @@ namespace PersonRegistry.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTimeOffset>("LastModifiedAtUtc")
+                    b.Property<DateTimeOffset?>("LastModifiedAtUtc")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
@@ -75,11 +75,31 @@ namespace PersonRegistry.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name");
+
+                    b.HasIndex("PersonalNumber")
+                        .IsUnique();
+
+                    b.HasIndex("Surname");
+
                     b.ToTable("Persons", (string)null);
                 });
 
             modelBuilder.Entity("PersonRegistry.Infrastructure.Persistence.Entities.PersonRelationEntity", b =>
                 {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("CreatedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LastModifiedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<Guid>("PersonId")
                         .HasColumnType("uniqueidentifier");
 
@@ -87,20 +107,17 @@ namespace PersonRegistry.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Type")
+                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.HasKey("PersonId", "RelatedPersonId", "Type");
+                    b.HasKey("Id");
 
                     b.HasIndex("RelatedPersonId");
 
-                    b.HasIndex("PersonId", "Type");
+                    b.HasIndex("PersonId", "RelatedPersonId", "Type")
+                        .IsUnique()
+                        .HasFilter("[IsDeleted] = 0");
 
                     b.ToTable("PersonRelations", (string)null);
                 });
@@ -111,8 +128,14 @@ namespace PersonRegistry.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTimeOffset?>("CreatedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LastModifiedAtUtc")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Number")
                         .IsRequired()
@@ -130,7 +153,9 @@ namespace PersonRegistry.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PersonId");
+                    b.HasIndex("PersonId", "Type", "Number")
+                        .IsUnique()
+                        .HasFilter("[IsDeleted] = 0");
 
                     b.ToTable("PhoneNumbers", (string)null);
                 });

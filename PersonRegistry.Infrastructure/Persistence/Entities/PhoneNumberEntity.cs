@@ -8,13 +8,12 @@ using System.Threading.Tasks;
 
 namespace PersonRegistry.Infrastructure.Persistence.Entities
 {
-    public class PhoneNumberEntity
+    public class PhoneNumberEntity : DatabaseEntity
     {
         public PhoneNumberEntity() { }
         public Guid Id { get; set; }
         public Guid PersonId { get;  set; }
         public string Type { get;  set; }
         public string Number { get;  set; }
-        public bool IsDeleted { get;  set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
+using PersonRegistry.Application.Features.Person.Commands.AddPhoneNumber;
 using PersonRegistry.Application.Repositories;
 using PersonRegistry.Application.Repositories.Aggregates;
 using System;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace PersonRegistry.Application.Features.Person.Commands.DeletePerson
 {
-    public class DeletePersonCommandHandler
+    public class DeletePersonCommandHandler : IRequestHandler<DeletePersonCommand, Unit>
     {
         private readonly IPersonRepository _personRepository;
 

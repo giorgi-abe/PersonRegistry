@@ -35,9 +35,11 @@ namespace PersonRegistry.Infrastructure.Persistence.Configurations
              .HasForeignKey(p => p.PersonId)
              .OnDelete(DeleteBehavior.Cascade);
 
-            
 
-            //b.HasIndex("PersonId", "Type", "Number", "IsDeleted").IsUnique();
+
+            b.HasIndex(p => new { p.PersonId, p.Type, p.Number })
+             .IsUnique()
+             .HasFilter("[IsDeleted] = 0");
 
 
         }

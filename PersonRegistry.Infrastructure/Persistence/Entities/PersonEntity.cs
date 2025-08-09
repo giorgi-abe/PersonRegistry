@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PersonRegistry.Infrastructure.Persistence.Entities
 {
-    public class PersonEntity
+    public class PersonEntity : DatabaseEntity
     {
         public PersonEntity() { }
         public Guid Id { get; set; }
@@ -20,9 +20,6 @@ namespace PersonRegistry.Infrastructure.Persistence.Entities
         public DateOnly BirthDate { get;  set; }
 
         public uint Version { get;  set; }
-        public DateTimeOffset CreatedAtUtc { get;  set; }
-        public DateTimeOffset LastModifiedAtUtc { get;  set; }
-        public bool IsDeleted { get;  set; }
 
 
         public List<PhoneNumberEntity> PhoneNumbers { get; set; }

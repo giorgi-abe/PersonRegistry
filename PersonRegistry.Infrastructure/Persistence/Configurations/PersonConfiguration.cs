@@ -30,7 +30,7 @@ namespace PersonRegistry.Infrastructure.Persistence.Configurations
                   .HasMaxLength(50)
                   .IsRequired();
 
-           // b.HasIndex(v => v.Name);
+           b.HasIndex(v => v.Name);
 
 
 
@@ -39,7 +39,7 @@ namespace PersonRegistry.Infrastructure.Persistence.Configurations
                   .HasMaxLength(50)
                   .IsRequired();
 
-            //b.HasIndex(v => v.Surname);
+            b.HasIndex(v => v.Surname);
 
 
             b.Property(v => v.PersonalNumber)
@@ -47,7 +47,7 @@ namespace PersonRegistry.Infrastructure.Persistence.Configurations
                .HasMaxLength(11)
                .IsRequired();
 
-           // b.HasIndex(v => v.PersonalNumber).IsUnique();
+            b.HasIndex(v => v.PersonalNumber).IsUnique();
 
 
 

@@ -16,8 +16,7 @@ namespace PersonRegistry.Infrastructure.Persistence.Configurations
         {
             b.ToTable("PersonRelations");
 
-            // Composite key
-            b.HasKey(r => new { r.PersonId, r.RelatedPersonId, r.Type });
+            b.HasKey(r => r.Id);
 
             b.Property(r => r.PersonId).IsRequired();
             b.Property(r => r.RelatedPersonId).IsRequired();
@@ -27,21 +26,19 @@ namespace PersonRegistry.Infrastructure.Persistence.Configurations
              .HasMaxLength(20)
              .IsRequired();
 
-            // Owner (outgoing) relations cascade on delete of owner
             b.HasOne<PersonEntity>()
              .WithMany(p => p.OutgoingRelations)
              .HasForeignKey(r => r.PersonId)
              .OnDelete(DeleteBehavior.Cascade);
 
-            // Incoming relations must NOT cascade (avoid cycles)
             b.HasOne<PersonEntity>()
              .WithMany(p => p.IncomingRelations)
              .HasForeignKey(r => r.RelatedPersonId)
              .OnDelete(DeleteBehavior.NoAction);
 
-            // Optional helper index
-            b.HasIndex(r => new { r.PersonId, r.Type });
-            
+            b.HasIndex(p => new { p.PersonId, p.RelatedPersonId, p.Type })
+             .IsUnique()
+             .HasFilter("[IsDeleted] = 0");
         }
     }
 }
