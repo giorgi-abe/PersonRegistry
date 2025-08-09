@@ -27,7 +27,7 @@ namespace PersonRegistry.Application.Behaviours
             _logger = logger;
             _unitOfWork = unitOfWork;
         }
-
+        // Logs start/end, runs the handler, then persists via UnitOfWork.
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken)
         {
             var commandName = typeof(TRequest).Name;

@@ -22,8 +22,8 @@ namespace PersonRegistry.Application
                 configuration.RegisterServicesFromAssembly(typeof(ApplicationExtensions).Assembly);
             });
 
-            
 
+            // Scrutor: decorate IRequestHandler<,> where TRequest : ICommand<TResponse>
             services.Decorate(typeof(IRequestHandler<,>), typeof(CustomCommandHandlerDecorator<,>));
 
             services.AddAutoMapper(

@@ -53,6 +53,7 @@ namespace PersonRegistry.Infrastructure.Persistence.MappingProfiles
                 }
             }
         }
+
         // Syncs outgoing relations: updates existing, removes missing, adds new.
         private static void SyncRelations(Person d, PersonEntity e)
         {
