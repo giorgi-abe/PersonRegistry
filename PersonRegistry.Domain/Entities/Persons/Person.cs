@@ -109,7 +109,7 @@ namespace PersonRegistry.Domain.Entities.Persons
             var incoming = phones.ToList();
 
             var toRemove = _phoneNumbers
-                .Where(existing => !incoming.Any(p => p.Type == existing.Type && p.Number == existing.Number))
+                .Where(existing => !incoming.Any(p => p.Type == existing.Type))
                 .ToList();
 
             foreach (var phone in toRemove)
